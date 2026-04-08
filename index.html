@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<style>
+:root {
+  --screenWidth: 1920px;
+  --screenHeight: 1080px;
+  --backgroundColor: azure;
+  --normalFontSize: 48px;
+  --normalTextColor: darkslategray;
+  --headerBackgroundColor: steelblue;
+  --headerTextColor: azure;
+  --headerHeight: 128px;
+  --headerFontSize: 96px;
+  --footerHeight: 64px;
+  --footerFontSize: 32px;
+  --footerBackgroundColor: steelblue;
+  --footerTextColor: azure;
+}
+</style>
+<body>
+
+<div class="slide">
+  <div class="header">Text</div>
+  <div class="content">
+    <div class="left-text">Left Text</div>
+    <div class="centered-text">Centered Text</div>
+    <div class="right-text">Right Text</div>
+    <div class="text-box" style="left: 200px; top: 500px">Text Box</div>
+    <div class="text-box" style="left: 500px; top: 700px">Text Box</div>
+
+  </div>
+</div>
+<div class="slide">
+  <div class="header">Table</div>
+  <div class="content">
+    <div></div>
+    <table>
+      <thead>
+        <tr><th>First Column</th><th>Second Column</th><tr>
+      </thead>
+      <tbody>
+        <tr><td>one</td><td>two</td></tr>
+        <tr><td>very, very, veeery loooong entry</td><td>four</td></tr>        
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="slide">
+  <div class="header">Diagram</div>
+  <div class="content">
+    <div class="text-box border" style="left: 500px; top: 200px; width: 150px; height: 200px;">
+        Hallo
+        <div class="text-box border" style="left: 16px">bla</div>
+    </div>
+    <div class="text-box border" style="left: 900px; top: 500px">blubb</div>
+<svg class="line" width="100%" height="100%"><line x1="968" y1="496" x2="598" y2="302" marker-end="url(#arrow)"></line></svg>
+  </div>
+</div>
+</body>
+
+<style>
+
+body {
+  margin: 0;
+  background-color: var(--backgroundColor);
+  font-family: sans-serif;
+  font-size: var(--normalFontSize);
+  color: var(--normalTextColor);
+}
+
+@page {
+  width: var(--screenWidth);
+  height: var(--screenHeight);
+}
+
+@media screen {
+  .slide {
+    margin: 32px;
+    box-shadow: 0 0 30px #0008;
+  }
+}
+
+@media print {
+  .slide {
+    break-after: page;
+  }
+}
+
+.slide {
+  width: var(--screenWidth);
+  height: var(--screenHeight);
+  .header {
+    width: 100%;
+    height: var(--headerHeight);
+    background-color: var(--headerBackgroundColor);
+    color: var(--headerTextColor);
+    font-size: var(--headerFontSize);
+    text-align: center;
+    align-content: center;
+  }
+  .content {
+    width: 100%;
+    height: calc(var(--screenHeight) - var(--headerHeight) - var(--footerHeight));
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+  }
+  .footer {
+    width: 100%;
+
+    div {
+      height: var(--footerHeight);
+      font-size: var(--footerFontSize);
+      background-color: var(--footerBackgroundColor);
+      color: var(--footerTextColor);
+      text-align: right;
+      align-content: center;
+      padding-right: 10px;
+    }
+  }
+}
+
+div {
+  min-height: 64px;
+}
+
+.text-box {
+  position: absolute;
+}
+
+.text-box.border {
+  border: 4px solid var(--normalTextColor);
+}
+
+.left-text {
+  text-align: left;
+  margin: 16px;
+}
+
+.right-text {
+  text-align: right;
+  margin: 16px;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+table {
+  justify-self: center;
+  border-collapse: collapse;
+  thead {
+    tr {
+      th {
+        text-align: left;
+        padding-left: 32px;
+        padding-right: 32px;
+        border-top: 4px solid var(--normalTextColor);
+        border-bottom: 4px solid var(--normalTextColor);
+      }
+    }
+  }
+  tbody {
+    tr {
+      td {
+        text-align: left;
+        padding-left: 32px;
+        padding-right: 32px;
+        border-bottom: 2px solid var(--normalTextColor);
+      }
+    }
+    tr:last-child {
+      td {
+        border-bottom: 4px solid var(--normalTextColor);
+      }
+    }
+  }
+}
+
+
+svg.line {
+  position: absolute;
+  top:0;
+  left:0;
+  stroke: var(--normalTextColor);
+  stroke-width: 4px;
+  fill: var(--normalTextColor);
+}
+
+</style>
+<svg class="line" width="100%" height="100%" style="z-index: -10000">
+    <defs>
+<marker id="arrow" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto">
+      <path d="M 0 0 L 5 2.5 L 0 5 z" stroke="none" />
+    </marker>
+</defs>
+</svg>
+<script type="module">
+
+  const slides = Array.from(document.getElementsByClassName('slide'))
+  const numberOfPages = slides.length
+  let pageIndex = 0
+  let point = []
+  for (const slide of slides) {
+    pageIndex++
+    slide.innerHTML += `<div class="footer"><div>${pageIndex}/${numberOfPages}</div></div>`
+    Array.from(slide.getElementsByClassName('content'))[0].addEventListener('mousedown', (event) => {
+      if (point.length == 0) {
+        point = [event.offsetX, event.offsetY]
+      } else {
+        alert(`<svg class="line" width="100%" height="100%"><line x1="${point[0]}" y1="${point[1]}" x2="${event.offsetX}" y2="${event.offsetY}" marker-end="url(#arrow)"></line></svg>`)
+        point = []
+      }
+    })
+  }
+</script>
+
+</html>
