@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Page Title</title>
+<title>Presentation</title>
 </head>
 <style>
 :root {
@@ -36,36 +36,44 @@ const lineStyles = {
   }
 }
 </script>
+
 <body>
+
 <div style="max-height: 0; min-height: 0; height: 0;">
-<svg width="100%" height="100%">
-  <defs>
-    <marker id="solid-arrow-forward" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto">
-      <path d="M 0 0 L 4 2 L 0 4 z" fill="var(--normalTextColor)" stroke-width="0" />
-    </marker>
-    <marker id="solid-arrow-backward" markerWidth="4" markerHeight="4" refX="1" refY="2" orient="auto">
-      <path d="M 4 0 L 0 2 L 4 4 z" fill="var(--normalTextColor)" stroke-width="0" />
-    </marker>
-  </defs>
-</svg>
+  <svg width="100%" height="100%">
+    <defs>
+      <marker id="solid-arrow-forward" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto">
+        <path d="M 0 0 L 4 2 L 0 4 z" fill="var(--normalTextColor)" stroke-width="0" />
+      </marker>
+      <marker id="solid-arrow-backward" markerWidth="4" markerHeight="4" refX="1" refY="2" orient="auto">
+        <path d="M 4 0 L 0 2 L 4 4 z" fill="var(--normalTextColor)" stroke-width="0" />
+      </marker>
+    </defs>
+  </svg>
+</div>
+
+<div class="titleslide">
+  <div class="title">How to make<br>slides for a presentation<br>using<br>a single HTML file</div>
+  <div class="subtitle">Tobias Fröhlich</div>
 </div>
 
 <div class="slide">
   <div class="header">Text</div>
   <div class="content">
-    <div class="left-text">Left Text</div>
-    <div class="centered-text">Centered Text</div>
-    <div class="right-text">Right Text</div>
-    <div id="bla" class="text-box" style="left: 200px; top: 500px">Text Box</div>
-    <div id="blubb" class="text-box" style="left: 500px; top: 700px">Text Box</div>
-    <div class="line">{"from": "bla.S", "to": "blubb.N", "style": "normalArrow"}</div>
-
+    <div class="left-text">This template consists of a single HTML file. The styling of the slides is done via CSS. Some simple adjustments can be done without knowlage of HTML and CSS. For example the colors can be found in variables that can be easily changed.</div>
+    <div class="centered-text">It is possible to define CSS classes that center-align a text.</div>
+    <div class="right-text">Or a CSS class that aligns the text to the right.</div>
+    <div class="text-box" style="left: 200px; top: 500px">It is also possible<br>to use <code>position: absolute</code><br>for floating text boxes.</div>
+    <div class="text-box border" style="left: 800px; top: 630px">Alternatively with a border.</div>
+    <div class="text-box" style="right: 16px; bottom: 16px; font-size: 32px">The footer with the slide number is automatically added using JavaScript.</div>
   </div>
 </div>
+
 <div class="slide">
-  <div class="header">Table</div>
+  <div class="header">Tables and Lists</div>
   <div class="content">
-    <div></div>
+    <div class="left-text">Tables can be done as usually in HTML and they can be styled e.g. like this:</div>
+    <div class="vertical-space"></div>
     <table>
       <thead>
         <tr><th>First Column</th><th>Second Column</th><tr>
@@ -75,24 +83,62 @@ const lineStyles = {
         <tr><td>very, very, veeery loooong entry</td><td>four</td></tr>        
       </tbody>
     </table>
+    <div class="vertical-space"></div>
+    <div class="left-text">The same for unordered lists:</div>
+    <ul>
+      <li>Apple</li>
+      <li>Banana</li>
+      <li>Grapefruit</li>
+    </ul>
   </div>
 </div>
+
 <div class="slide">
-  <div class="header">Diagram</div>
+  <div class="header">Diagrams</div>
   <div class="content">
+    <div class="left-text">Diagrams can also be build using normal HTML. This has the advantage that the styling of the font and the borders is consistent with the rest of the presentation.</div>
+    <div class="right-text" style="max-width: 600px">Only the connection lines like arrows are a bit tricky. They are done via a placeholder element.</div>
+    <div class="vertical-space"></div>
+    <div class="vertical-space"></div>
+    <div class="left-text"><code>&lt;div class="line"&gt;{"from": "bla.SE", "to": "blubb.NW", "style": "bidirectionalArrow"}&lt;/div&gt;</code></div>
+    <div class="left-text">This placeholder element is then parsed by JavaScript and an arrow is rendered using SVG. The connected elements must have an <code>id</code>. For example, <code>"bla.SE"</code> means that the South-East corner of the Element "bla" is used.</div>
     <div class="text-box border" style="left: 500px; top: 200px; width: 150px; height: 300px;">
-        Hallo
-        <div id="bla" class="text-box border" style="left: 16px">bla</div>
-        <div id="bli" class="text-box border" style="left: 16px; top: 200px">bli</div>
+        Hello
+        <div id="bla" class="text-box border" style="left: 16px">Bla</div>
+        <div id="bli" class="text-box border" style="left: 16px; top: 200px">Bli</div>
     </div>
-    <div id="blubb" class="text-box border" style="left: 900px; top: 500px">blubb</div>
-<!-- <svg width="100%" height="100%"><line x1="968" y1="496" x2="598" y2="302" marker-end="url(#solid-arrow-forward)" marker-start="url(#solid-arrow-forward)"></line></svg> -->
+    <div id="blubb" class="text-box border" style="left: 900px; top: 500px">Blubb</div>
     <div class="line">{"from": "bla.SE", "to": "blubb.NW", "style": "bidirectionalArrow"}</div>
     <div class="line">{"from": "bla.S", "to": "bli.N", "style": "normalArrow"}</div>
   </div>
 </div>
-</body>
 
+<div class="slide">
+  <div class="header">Workflow</div>
+  <div class="content">
+    <div id="step-1" class="text-box center border" style="left: 32px; top: 132px; width: 300px; height: 400px">Start with this template</div>
+    <div id="step-2" class="text-box center border" style="left: 532px; top: 132px; width: 300px; height: 400px">Open the file a Browser</div>
+    <div id="step-3" class="text-box center border" style="left: 1032px; top: 132px; width: 300px; height: 400px">Edit the file with a text editor while watching the changes in the browser</div>
+    <div id="step-4" class="text-box center border" style="left: 1532px; top: 132px; width: 300px; height: 400px">Use the print functionality of the browser in order to generate a PDF file</div>
+    <div class="line">{"from": "step-1.E", "to": "step-2.W", "style": "normalArrow"}</div>
+    <div class="line">{"from": "step-2.E", "to": "step-3.W", "style": "normalArrow"}</div>
+    <div class="line">{"from": "step-3.E", "to": "step-4.W", "style": "normalArrow"}</div>
+    <div class="text-box" style="left: 32px; bottom: 32px; font-size: 32px">(You can also place images next to the HTML file and use them like usually in HTML. But then it is not single-file any more.)</div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="header"></div>
+  <div class="content">
+
+
+        <div style="max-width: 100%; max-height: 100%; margin: 200px; padding: 100px; background-color: var(--headerBackgroundColor); color: var(--headerTextColor)">Thank you for using single file presentation!<br><br><span style="font-style: italic; font-size: 32px">https://github.com/tobias-froehlich/singlefilepresentation<span></div>
+
+
+  </div>
+</div>
+  
+</body>
 <style>
 
 body {
@@ -109,15 +155,39 @@ body {
 }
 
 @media screen {
-  .slide {
+  .slide, .titleslide {
     margin: 32px;
     box-shadow: 0 0 30px #0008;
   }
 }
 
 @media print {
-  .slide {
+  .slide, .titleslide {
     break-after: page;
+  }
+}
+
+.titleslide {
+  width: var(--screenWidth);
+  height: var(--screenHeight);
+  .title {
+    width: 100%;
+    height: 60%;
+    background-color: var(--headerBackgroundColor);
+    color: var(--headerTextColor);
+    font-size: 96px;
+    text-align: center;
+    align-content: center;
+  }
+  .subtitle {
+    width: 100%;
+    height: 40%;
+    background-color: var(--headerTextColor);
+    color: var(--headerBackgroundColor);
+    font-size: 48px;
+    font-style: italic;
+    text-align: center;
+    align-content: center;
   }
 }
 
@@ -155,7 +225,7 @@ body {
   }
 }
 
-div {
+.vertical-space {
   min-height: 64px;
 }
 
@@ -163,22 +233,37 @@ div {
   position: absolute;
 }
 
+.text-box.center {
+  padding: 16px;
+  text-align: center;
+  align-content: center;
+}
+
 .text-box.border {
   border: 4px solid var(--normalTextColor);
 }
 
 .left-text {
+  justify-self: left;
   text-align: left;
-  margin: 16px;
+  margin: 32px;
 }
 
 .right-text {
+  justify-self: right;
   text-align: right;
-  margin: 16px;
+  margin: 32px;
 }
 
 .centered-text {
+  justify-self: center;
   text-align: center;
+}
+
+code {
+  display: inline;
+  font-size: 32px;
+  background-color: #0002
 }
 
 table {
@@ -212,6 +297,13 @@ table {
   }
 }
 
+ul {
+  justify-self: left;
+  margin-left: 32px;
+  li {
+    text-align: left;
+  }
+}
 
 .line {
   display: none; 
@@ -251,7 +343,6 @@ table {
   function renderLines() {
     const contents = Array.from(document.getElementsByClassName('content'))
     for (const content of contents) {
-            console.warn(content)
       const lines = Array.from(content.getElementsByClassName('line'))
       if (lines.length > 0) {
         let svgString = '<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0">'
@@ -270,7 +361,6 @@ table {
           if (!toWords.length == 2) {
             throw Error(`Invalid field "to" in ${lineConfig}.`)
           }
-          console.warn(content)
           const fromElement = content.querySelectorAll(`#${fromWords[0]}`)[0]
           if (!fromElement) {
             throw Error(`Element with id ${fromWords[0]} not found.`)
@@ -285,8 +375,6 @@ table {
           const toCoordinates = getCoordinates(content, toElement, toPosition)
           const styleString = `stroke-width: ${style.width}; stroke: ${style.color}`
           svgString += `<line x1="${fromCoordinates[0]}" y1="${fromCoordinates[1]}" x2="${toCoordinates[0]}" y2="${toCoordinates[1]}" style="${styleString}" marker-start="url(#${style.markerStart})" marker-end="url(#${style.markerEnd})"></line>`
-          console.warn(fromCoordinates)
-          console.warn(toCoordinates)
         }
         svgString += '</svg>'
         content.innerHTML += svgString
