@@ -20,7 +20,35 @@
   --footerTextColor: azure;
 }
 </style>
+
+<script>
+const lineStyles = {
+  normalArrow: {
+    color: 'var(--normalTextColor)',
+    width: '8px',
+    markerEnd: 'solid-arrow-forward',
+  },
+  bidirectionalArrow: {
+    color: 'var(--normalTextColor)',
+    width: '8px',
+    markerStart: 'solid-arrow-backward',
+    markerEnd: 'solid-arrow-forward',
+  }
+}
+</script>
 <body>
+<div style="max-height: 0; min-height: 0; height: 0;">
+<svg width="100%" height="100%">
+  <defs>
+    <marker id="solid-arrow-forward" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto">
+      <path d="M 0 0 L 4 2 L 0 4 z" fill="var(--normalTextColor)" stroke-width="0" />
+    </marker>
+    <marker id="solid-arrow-backward" markerWidth="4" markerHeight="4" refX="1" refY="2" orient="auto">
+      <path d="M 4 0 L 0 2 L 4 4 z" fill="var(--normalTextColor)" stroke-width="0" />
+    </marker>
+  </defs>
+</svg>
+</div>
 
 <div class="slide">
   <div class="header">Text</div>
@@ -28,8 +56,9 @@
     <div class="left-text">Left Text</div>
     <div class="centered-text">Centered Text</div>
     <div class="right-text">Right Text</div>
-    <div class="text-box" style="left: 200px; top: 500px">Text Box</div>
-    <div class="text-box" style="left: 500px; top: 700px">Text Box</div>
+    <div id="bla" class="text-box" style="left: 200px; top: 500px">Text Box</div>
+    <div id="blubb" class="text-box" style="left: 500px; top: 700px">Text Box</div>
+    <div class="line">{"from": "bla.S", "to": "blubb.N", "style": "normalArrow"}</div>
 
   </div>
 </div>
@@ -51,12 +80,15 @@
 <div class="slide">
   <div class="header">Diagram</div>
   <div class="content">
-    <div class="text-box border" style="left: 500px; top: 200px; width: 150px; height: 200px;">
+    <div class="text-box border" style="left: 500px; top: 200px; width: 150px; height: 300px;">
         Hallo
-        <div class="text-box border" style="left: 16px">bla</div>
+        <div id="bla" class="text-box border" style="left: 16px">bla</div>
+        <div id="bli" class="text-box border" style="left: 16px; top: 200px">bli</div>
     </div>
-    <div class="text-box border" style="left: 900px; top: 500px">blubb</div>
-<svg class="line" width="100%" height="100%"><line x1="968" y1="496" x2="598" y2="302" marker-end="url(#arrow)"></line></svg>
+    <div id="blubb" class="text-box border" style="left: 900px; top: 500px">blubb</div>
+<!-- <svg width="100%" height="100%"><line x1="968" y1="496" x2="598" y2="302" marker-end="url(#solid-arrow-forward)" marker-start="url(#solid-arrow-forward)"></line></svg> -->
+    <div class="line">{"from": "bla.SE", "to": "blubb.NW", "style": "bidirectionalArrow"}</div>
+    <div class="line">{"from": "bla.S", "to": "bli.N", "style": "normalArrow"}</div>
   </div>
 </div>
 </body>
@@ -181,41 +213,88 @@ table {
 }
 
 
-svg.line {
-  position: absolute;
-  top:0;
-  left:0;
-  stroke: var(--normalTextColor);
-  stroke-width: 4px;
-  fill: var(--normalTextColor);
+.line {
+  display: none; 
 }
 
 </style>
-<svg class="line" width="100%" height="100%" style="z-index: -10000">
-    <defs>
-<marker id="arrow" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto">
-      <path d="M 0 0 L 5 2.5 L 0 5 z" stroke="none" />
-    </marker>
-</defs>
-</svg>
-<script type="module">
 
-  const slides = Array.from(document.getElementsByClassName('slide'))
-  const numberOfPages = slides.length
-  let pageIndex = 0
-  let point = []
-  for (const slide of slides) {
-    pageIndex++
-    slide.innerHTML += `<div class="footer"><div>${pageIndex}/${numberOfPages}</div></div>`
-    Array.from(slide.getElementsByClassName('content'))[0].addEventListener('mousedown', (event) => {
-      if (point.length == 0) {
-        point = [event.offsetX, event.offsetY]
-      } else {
-        alert(`<svg class="line" width="100%" height="100%"><line x1="${point[0]}" y1="${point[1]}" x2="${event.offsetX}" y2="${event.offsetY}" marker-end="url(#arrow)"></line></svg>`)
-        point = []
-      }
-    })
+<script type="module">
+  function addFooters() {
+    const slides = Array.from(document.getElementsByClassName('slide'))
+    const numberOfPages = slides.length
+    let pageIndex = 0
+    let point = []
+    for (const slide of slides) {
+      pageIndex++
+      slide.innerHTML += `<div class="footer"><div>${pageIndex}/${numberOfPages}</div></div>`
+    }
   }
+  function getCoordinates(content, element, position) {
+    const rectContent = content.getBoundingClientRect()
+    const rectElement = element.getBoundingClientRect()
+    const x = rectElement.x - rectContent.x
+    const y = rectElement.y - rectContent.y
+    const width = rectElement.width
+    const height = rectElement.height
+    if (position === 'NW') return [x, y]
+    if (position === 'N') return [x + 0.5 * width, y]
+    if (position === 'NE') return [x + width, y]
+    if (position === 'E') return [x + width, y + 0.5 * height]
+    if (position === 'SE') return [x + width, y + height]
+    if (position === 'S') return [x + 0.5 * width, y + height]
+    if (position === 'SW') return [x, y + height]
+    if (position === 'W') return [x, y + 0.5 * height]
+    throw Error(`Unknown position ${position}.`)
+  }
+  
+  function renderLines() {
+    const contents = Array.from(document.getElementsByClassName('content'))
+    for (const content of contents) {
+            console.warn(content)
+      const lines = Array.from(content.getElementsByClassName('line'))
+      if (lines.length > 0) {
+        let svgString = '<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0">'
+        for (const line of lines) {
+          const lineConfig = JSON.parse(line.innerHTML)
+          const style = lineStyles[lineConfig.style]
+          if (!style) {
+            throw Error(`The line style ${lineConfig.style} is not defined.`)
+          }
+          lineConfig.style = lineStyles[lineConfig.style]
+          const fromWords = lineConfig.from.split('.')
+          if (!fromWords.length == 2) {
+            throw Error(`Invalid field "from" in ${lineConfig}.`)
+          }
+          const toWords = lineConfig.to.split('.')
+          if (!toWords.length == 2) {
+            throw Error(`Invalid field "to" in ${lineConfig}.`)
+          }
+          console.warn(content)
+          const fromElement = content.querySelectorAll(`#${fromWords[0]}`)[0]
+          if (!fromElement) {
+            throw Error(`Element with id ${fromWords[0]} not found.`)
+          }
+          const fromPosition = fromWords[1]
+          const toElement = content.querySelectorAll(`#${toWords[0]}`)[0]
+          if (!toElement) {
+            throw Error(`Element with id ${toWords[0]} not found.`)
+          }
+          const toPosition = toWords[1]
+          const fromCoordinates = getCoordinates(content, fromElement, fromPosition)
+          const toCoordinates = getCoordinates(content, toElement, toPosition)
+          const styleString = `stroke-width: ${style.width}; stroke: ${style.color}`
+          svgString += `<line x1="${fromCoordinates[0]}" y1="${fromCoordinates[1]}" x2="${toCoordinates[0]}" y2="${toCoordinates[1]}" style="${styleString}" marker-start="url(#${style.markerStart})" marker-end="url(#${style.markerEnd})"></line>`
+          console.warn(fromCoordinates)
+          console.warn(toCoordinates)
+        }
+        svgString += '</svg>'
+        content.innerHTML += svgString
+      }
+    }
+  }
+  addFooters()
+  renderLines()
 </script>
 
 </html>
