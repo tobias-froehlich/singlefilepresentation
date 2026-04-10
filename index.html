@@ -114,6 +114,17 @@ const lineStyles = {
 </div>
 
 <div class="slide">
+  <div class="header">Step-Appear</div>
+  <div class="content">
+    <div class="left-text">It is also possible, to make elements appear one after the other.</div>
+    <div class="left-text step-appear-1">For this, use the classes <code class="step-appear-1">step-appear-1, step-appear-2, etc</code>.</div>
+    <div id="box-one" class="text-box border center step-appear-2" style="left: 200px; top: 400px; width: 500px; height: 100px">It also works for</div>
+    <div id="box-two" class="text-box border center step-appear-3" style="left: 1000px; top: 400px; width: 300px; height: 100px">lines</div>
+    <div class="line step-appear-3">{"from": "box-one.E", "to": "box-two.W", "style": "normalArrow"}</div>
+  </div>
+</div>
+
+<div class="slide">
   <div class="header">Workflow</div>
   <div class="content">
     <div id="step-1" class="text-box center border" style="left: 32px; top: 132px; width: 300px; height: 400px">Start with this template</div>
@@ -222,6 +233,13 @@ body {
       align-content: center;
       padding-right: 10px;
     }
+  }
+}
+
+.hidden {
+  visibility: hidden!important;
+  * {
+    visibility: visible;
   }
 }
 
@@ -374,15 +392,64 @@ ul {
           const fromCoordinates = getCoordinates(content, fromElement, fromPosition)
           const toCoordinates = getCoordinates(content, toElement, toPosition)
           const styleString = `stroke-width: ${style.width}; stroke: ${style.color}`
-          svgString += `<line x1="${fromCoordinates[0]}" y1="${fromCoordinates[1]}" x2="${toCoordinates[0]}" y2="${toCoordinates[1]}" style="${styleString}" marker-start="url(#${style.markerStart})" marker-end="url(#${style.markerEnd})"></line>`
+          const classes = line.className.split(' ').filter((c) => c != 'line').join(' ')
+          svgString += `<line class="${classes}" x1="${fromCoordinates[0]}" y1="${fromCoordinates[1]}" x2="${toCoordinates[0]}" y2="${toCoordinates[1]}" style="${styleString}" marker-start="url(#${style.markerStart})" marker-end="url(#${style.markerEnd})"></line>`
         }
         svgString += '</svg>'
         content.innerHTML += svgString
       }
     }
   }
+  function makeStepSlides() {
+    function findLargestAppearStep(slide) {
+      let result = 0
+      for (const element of slide.querySelectorAll('*')) {
+        const classNames = element.className
+        if (typeof classNames === 'string') {
+          for (const className of classNames.split(' ')) {
+            if (className.startsWith('step-appear-')) {
+              const number = Number(className.substring('step-appear-'.length))
+              if (number > result) {
+                result = number
+              }
+            }
+          }
+        }
+      }
+      return result
+    }
+    function hideElements(slide, stepIndex) {
+      for (const element of slide.querySelectorAll('*')) {
+        const classNames = element.className
+        if (typeof classNames === 'string') {
+          for (const className of classNames.split(' ')) {
+            if (className.startsWith('step-appear-')) {
+              const number = Number(className.substring('step-appear-'.length))
+              if (number > stepIndex) {
+                element.className += ' ' + 'hidden'
+              }
+            }
+          }
+        }
+      }
+      return slide
+    }
+    function cloneSlide(slide, number) {
+      for (let stepIndex = 0; stepIndex < number; stepIndex++) {
+        slide.insertAdjacentElement('beforebegin', hideElements(slide.cloneNode(true), stepIndex))
+      }
+    }
+    const slides = Array.from(document.getElementsByClassName('slide'))
+    for (const slide of slides) {
+      const largestStep = findLargestAppearStep(slide)
+      if (largestStep > 0) {
+        cloneSlide(slide, largestStep)
+      }
+    }
+  }
   window.onload = function() {
     addFooters()
+    makeStepSlides()
     renderLines()
   }
 </script>
